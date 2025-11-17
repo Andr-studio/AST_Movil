@@ -3,7 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/tecnico_service.dart';
+import '../../models/ast_model.dart';
 import 'gestionar_tecnicos_screen.dart';
+import 'ast_pendientes_screen.dart';
+import 'revisar_ast_screen.dart';
 
 class SupervisorHomeScreen extends StatefulWidget {
   const SupervisorHomeScreen({super.key});
@@ -315,11 +318,12 @@ class _SupervisorHomeScreenState extends State<SupervisorHomeScreen> {
                   subtitle: Text(data['tecnicoNombre'] ?? 'Técnico'),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
-                    // TODO: Implementar en Fase 6
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Aprobación de AST disponible en Fase 6'),
-                        backgroundColor: Colors.orange,
+                    // Navegar a la pantalla de revisión de AST
+                    final ast = AST.fromFirestore(doc);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RevisarASTScreen(ast: ast),
                       ),
                     );
                   },
@@ -329,11 +333,11 @@ class _SupervisorHomeScreenState extends State<SupervisorHomeScreen> {
             if (snapshot.data!.docs.length >= 5)
               TextButton(
                 onPressed: () {
-                  // TODO: Ver todos los AST pendientes
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Vista completa de AST disponible en Fase 6'),
-                      backgroundColor: Colors.orange,
+                  // Navegar a la pantalla completa de AST pendientes
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ASTPendientesScreen(),
                     ),
                   );
                 },
@@ -366,16 +370,16 @@ class _SupervisorHomeScreenState extends State<SupervisorHomeScreen> {
         const SizedBox(height: 12),
         _buildActionButton(
           context,
-          'Aprobar AST',
-          'Revisar y aprobar análisis de trabajo',
+          'Revisar AST Pendientes',
+          'Aprobar o rechazar análisis de trabajo',
           Icons.assignment_turned_in,
           Colors.blue,
           () {
-            // TODO: Implementar en Fase 6
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Aprobación de AST disponible en Fase 6'),
-                backgroundColor: Colors.orange,
+            // Navegar a la pantalla de AST pendientes
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ASTPendientesScreen(),
               ),
             );
           },

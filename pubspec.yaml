@@ -25,6 +25,7 @@ dependencies:
 
   # Utils
   intl: ^0.20.2
+  url_launcher: ^6.3.1           # Abrir URLs externas
 
   # Fase 3 - Formulario AST
   signature: ^6.3.0              # Firma digital
