@@ -3,9 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/ast_model.dart';
 import '../models/user_model.dart';
+import '../models/notification_model.dart';
+import 'notification_service.dart';
 
 class ASTService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
   // Generar número MTA automático
   Future<String> generarNumeroMTA() async {
@@ -95,6 +98,20 @@ class ASTService {
         'tecnicos.${tecnico.uid}.ultimoAST': FieldValue.serverTimestamp(),
         'ultimaActualizacion': FieldValue.serverTimestamp(),
       });
+
+      // Enviar notificación al supervisor sobre el nuevo AST
+      await _notificationService.sendNotificationToUser(
+        userId: supervisor.uid,
+        title: '📋 Nuevo AST Pendiente',
+        body: '${tecnico.nombre} ha generado un nuevo AST: $numeroMTA',
+        data: {
+          'type': 'nuevo_ast',
+          'astId': docId,
+          'numeroMTA': numeroMTA,
+          'tecnicoUid': tecnico.uid,
+          'tecnicoNombre': tecnico.nombre,
+        },
+      );
 
       return docId;
     } catch (e) {
