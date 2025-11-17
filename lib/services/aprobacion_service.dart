@@ -49,10 +49,8 @@ class AprobacionService {
       }
 
       // 4. Obtener información del técnico
-      final tecnicoDoc = await _firestore
-          .collection('usuarios')
-          .doc(ast.tecnicoUid)
-          .get();
+      final tecnicoDoc =
+          await _firestore.collection('usuarios').doc(ast.tecnicoUid).get();
 
       if (!tecnicoDoc.exists) {
         throw 'Técnico no encontrado';
@@ -79,7 +77,11 @@ class AprobacionService {
         carpetaTecnicoId: carpetaDriveId,
       );
 
-      final firmaSupervisorUrl = firmaData['url'];
+      final firmaSupervisorUrl = firmaData['url'] as String?;
+
+      if (firmaSupervisorUrl == null || firmaSupervisorUrl.isEmpty) {
+        throw 'Error al subir la firma del supervisor a Drive';
+      }
 
       // 7. Descargar firma del técnico y foto del lugar
       String? firmaTecnicoPath;
