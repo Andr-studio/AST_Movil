@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "446134580895",
+    "project_id": "ast-app-55235",
+    "storage_bucket": "ast-app-55235.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446134580895:android:df6927b7c30e8fc36094aa",
+        "android_client_info": {
+          "package_name": "com.emcord.ast_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI6OUBnIPHogm5IUVr16x2dn8dnWmZ7bw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446134580895:android:ca86c6d882ca6c0a6094aa",
+        "android_client_info": {
+          "package_name": "com.example.ast_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI6OUBnIPHogm5IUVr16x2dn8dnWmZ7bw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446134580895:android:8e91b45c57aac2066094aa",
+        "android_client_info": {
+          "package_name": "com.example.ast_movil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI6OUBnIPHogm5IUVr16x2dn8dnWmZ7bw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

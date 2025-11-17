@@ -1,0 +1,62 @@
+name: ast_movil
+description: Sistema de Análisis Seguro de Trabajo con jerarquía Admin → Supervisor → Técnico
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^4.2.1
+  firebase_auth: ^6.1.2
+  cloud_firestore: ^6.1.0
+  firebase_messaging: ^16.0.4
+
+  # State Management
+  provider: ^6.1.5+1
+
+  # UI Components
+  flutter_svg: ^2.2.2
+  google_fonts: ^6.3.2
+
+  # Utils
+  intl: ^0.20.2
+
+  # Fase 3 - Formulario AST
+  signature: ^6.3.0              # Firma digital
+  geolocator: ^14.0.2            # GPS
+  geocoding: ^4.0.0              # Convertir coordenadas a dirección
+  image_picker: ^1.2.0           # Captura de foto
+  permission_handler: ^12.0.1    # Permisos de cámara y ubicación
+  path_provider: ^2.1.5         # Rutas de almacenamiento
+  
+  # Pdf
+  pdf: ^3.11.3
+
+  # Google Drive API
+  googleapis: ^15.0.0
+  googleapis_auth: ^2.0.0
+  http: ^1.5.0
+
+  # Icons
+
+  cupertino_icons: ^1.0.8
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/service-account.json
+    - assets/icons/
+
+  
