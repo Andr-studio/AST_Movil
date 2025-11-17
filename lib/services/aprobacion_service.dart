@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import '../models/ast_model.dart';
 import '../models/user_model.dart';
+import '../models/notification_model.dart';
 import 'almacenamiento_service.dart';
 import 'google_drive_service.dart';
 import 'pdf_service.dart';
 import 'ast_service.dart';
+import 'notification_service.dart';
 
 class AprobacionService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -15,6 +17,7 @@ class AprobacionService {
   final GoogleDriveService _driveService = GoogleDriveService();
   final PDFService _pdfService = PDFService();
   final ASTService _astService = ASTService();
+  final NotificationService _notificationService = NotificationService();
 
   /// Aprobar un AST con firma digital del supervisor
   ///
@@ -150,7 +153,21 @@ class AprobacionService {
         'pdfNombre': pdfData['nombre'],
       });
 
-      // 13. Limpiar archivos temporales
+      // 13. Enviar notificación al técnico
+      await _notificationService.sendNotificationToUser(
+        userId: ast.tecnicoUid,
+        title: '✅ AST Aprobado',
+        body: 'El AST ${ast.numeroMTA} ha sido aprobado por ${supervisor.nombre}',
+        data: {
+          'type': 'ast_aprobado',
+          'astId': astId,
+          'numeroMTA': ast.numeroMTA,
+          'supervisorUid': supervisor.uid,
+          'supervisorNombre': supervisor.nombre,
+        },
+      );
+
+      // 14. Limpiar archivos temporales
       await _limpiarArchivosTemporales([
         firmaTecnicoPath,
         fotoLugarPath,
@@ -203,6 +220,21 @@ class AprobacionService {
         astId: astId,
         supervisorUid: supervisor.uid,
         motivoRechazo: motivoRechazo.trim(),
+      );
+
+      // 6. Enviar notificación al técnico
+      await _notificationService.sendNotificationToUser(
+        userId: ast.tecnicoUid,
+        title: '❌ AST Rechazado',
+        body: 'El AST ${ast.numeroMTA} fue rechazado por ${supervisor.nombre}',
+        data: {
+          'type': 'ast_rechazado',
+          'astId': astId,
+          'numeroMTA': ast.numeroMTA,
+          'supervisorUid': supervisor.uid,
+          'supervisorNombre': supervisor.nombre,
+          'motivo': motivoRechazo.trim(),
+        },
       );
 
       // Nota: No se regenera el PDF en caso de rechazo,

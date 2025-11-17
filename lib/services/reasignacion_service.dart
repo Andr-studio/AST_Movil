@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 import '../models/reasignacion_model.dart';
+import '../models/notification_model.dart';
+import 'notification_service.dart';
 
 class ReasignacionService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
   /// Reasignar un técnico de un supervisor a otro
   /// Esta función realiza todas las actualizaciones necesarias en una transacción
@@ -216,6 +219,52 @@ class ReasignacionService {
 
       // 8. Ejecutar todas las operaciones
       await batch.commit();
+
+      // 9. Enviar notificaciones después de completar la transacción
+      // 9.1. Notificar al técnico que fue reasignado
+      await _notificationService.sendNotificationToUser(
+        userId: tecnicoUid,
+        title: '🔄 Reasignación de Supervisor',
+        body: 'Has sido reasignado de ${supervisorAnterior.nombre} a ${supervisorNuevo.nombre}',
+        data: {
+          'type': 'reasignado',
+          'nuevoSupervisorUid': supervisorNuevoUid,
+          'nuevoSupervisorNombre': supervisorNuevo.nombre,
+          'antiguoSupervisorUid': supervisorAnteriorUid,
+          'antiguoSupervisorNombre': supervisorAnterior.nombre,
+          'motivo': motivo ?? 'Sin motivo especificado',
+        },
+      );
+
+      // 9.2. Notificar al nuevo supervisor que recibe al técnico
+      await _notificationService.sendNotificationToUser(
+        userId: supervisorNuevoUid,
+        title: '🔄 Técnico Reasignado a Ti',
+        body: '${tecnico.nombre} ha sido reasignado desde ${supervisorAnterior.nombre} a tu supervisión',
+        data: {
+          'type': 'tecnico_reasignado',
+          'tecnicoUid': tecnicoUid,
+          'tecnicoNombre': tecnico.nombre,
+          'antiguoSupervisorUid': supervisorAnteriorUid,
+          'antiguoSupervisorNombre': supervisorAnterior.nombre,
+          'motivo': motivo ?? 'Sin motivo especificado',
+        },
+      );
+
+      // 9.3. Notificar al admin que se completó la reasignación
+      await _notificationService.sendNotificationToUser(
+        userId: adminUid,
+        title: '✅ Reasignación Completada',
+        body: '${tecnico.nombre} fue reasignado exitosamente de ${supervisorAnterior.nombre} a ${supervisorNuevo.nombre}',
+        data: {
+          'type': 'reasignacion_completada',
+          'tecnicoUid': tecnicoUid,
+          'tecnicoNombre': tecnico.nombre,
+          'nuevoSupervisorUid': supervisorNuevoUid,
+          'nuevoSupervisorNombre': supervisorNuevo.nombre,
+          'astPendientesReasignados': astPendientesCount,
+        },
+      );
     } catch (e) {
       throw 'Error al reasignar técnico: $e';
     }

@@ -2,10 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
+import '../services/notification_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
   AppUser? _currentUser;
   bool _isLoading = false;
@@ -26,10 +28,11 @@ class AuthProvider extends ChangeNotifier {
       
       if (firebaseUser != null) {
         await _loadUserData(firebaseUser.uid);
-        
-        // Actualizar último login
+
+        // Actualizar último login y FCM token
         if (_currentUser != null && _currentUser!.activo) {
           await _updateLastLogin(_currentUser!.uid);
+          await _notificationService.updateUserToken(_currentUser!.uid);
         }
       }
     } catch (e) {
@@ -74,8 +77,9 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      // Actualizar último login
+      // Actualizar último login y FCM token
       await _updateLastLogin(_currentUser!.uid);
+      await _notificationService.updateUserToken(_currentUser!.uid);
 
       _isLoading = false;
       notifyListeners();
@@ -145,6 +149,11 @@ class AuthProvider extends ChangeNotifier {
   // Logout
   Future<void> logout() async {
     try {
+      // Eliminar token FCM antes de cerrar sesión
+      if (_currentUser != null) {
+        await _notificationService.removeUserToken(_currentUser!.uid);
+      }
+
       await _auth.signOut();
       _currentUser = null;
       _errorMessage = null;

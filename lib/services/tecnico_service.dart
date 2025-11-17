@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
+import '../models/notification_model.dart';
+import 'notification_service.dart';
 
 class TecnicoService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
   // Crear técnico (solo Supervisor)
   Future<String?> crearTecnico({
@@ -82,6 +85,19 @@ class TecnicoService {
           }
         ],
       });
+
+      // 6. Enviar notificación al supervisor sobre el nuevo técnico
+      await _notificationService.sendNotificationToUser(
+        userId: supervisorUid,
+        title: '👷 Nuevo Técnico Creado',
+        body: 'Has creado exitosamente al técnico: ${nombre.trim()}',
+        data: {
+          'type': 'tecnico_creado',
+          'tecnicoUid': tecnicoUid,
+          'tecnicoNombre': nombre.trim(),
+          'tecnicoEmail': email.trim(),
+        },
+      );
 
       return tecnicoUid;
     } on FirebaseAuthException catch (e) {
