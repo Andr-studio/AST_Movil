@@ -6,6 +6,8 @@ import 'providers/auth_provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/admin/admin_home_screen.dart';
+import 'screens/admin/reasignar_tecnicos_screen.dart';
+import 'screens/admin/historial_reasignaciones_screen.dart';
 import 'screens/supervisor/supervisor_home_screen.dart';
 import 'screens/tecnico/tecnico_home_screen.dart';
 import 'utils/app_theme.dart';
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
         routes: {
           '/login': (context) => const LoginScreen(),
           '/admin-home': (context) => const AdminHomeScreen(),
+          '/reasignar-tecnicos': (context) => const ReasignarTecnicosScreen(),
+          '/historial_reasignaciones': (context) => const HistorialReasignacionesScreen(),
           '/supervisor-home': (context) => const SupervisorHomeScreen(),
           '/tecnico-home': (context) => const TecnicoHomeScreen(),
         },
