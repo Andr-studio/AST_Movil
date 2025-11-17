@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/supervisor_service.dart';
 import 'gestionar_supervisores_screen.dart';
+import 'reasignar_tecnicos_screen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -40,11 +41,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             icon: const Icon(Icons.swap_horiz),
             tooltip: 'Reasignar Técnicos',
             onPressed: () {
-              // TODO: Implementar en Fase 5
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Función disponible en Fase 5'),
-                  backgroundColor: Colors.orange,
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ReasignarTecnicosScreen(),
                 ),
               );
             },
@@ -319,11 +319,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           Icons.swap_horiz,
           Colors.purple,
           () {
-            // TODO: Implementar en Fase 5
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Función disponible en Fase 5'),
-                backgroundColor: Colors.orange,
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ReasignarTecnicosScreen(),
               ),
             );
           },
